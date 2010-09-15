@@ -67,15 +67,10 @@ function init_fairisle() {
 		$('#maingrid td').mousedown(function() { mouseisdown = true; $(this).removeClass().addClass($('.colorwell-selected').attr('id')); return false; });
 		$('#maingrid td').mouseenter(function() { if(mouseisdown) { $(this).removeClass().addClass($('.colorwell-selected').attr('id')); } });
 	}
-	function set_maingrid() {
-		// Apply table size modifications
-		set_rows($('#num_rows').val());
-		set_cols($('#num_cols').val());
-		redraw();
-	}
 	function rem_col(i) {
 		if(!i) {
-			$('#maingrid tr th:odd').prev().remove();
+			alert('No stitch specified!');
+			// $('#maingrid tr th:odd').prev().remove();
 		} else {
 			$('#maingrid tr').each(function() {
 				$(this).find('td:eq('+(parseInt(i)-1)+')').remove();
@@ -86,7 +81,7 @@ function init_fairisle() {
 	}
 	function add_row_after(i) {
 		if(!i) {
-			alert('No row specified');
+			alert('No row specified!');
 			// $('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:last'))
 			// 	.children('th').siblings('td').removeClass().addClass('colour0');
 			// $('#num_rows').val(num_rows());
@@ -215,10 +210,9 @@ function init_fairisle() {
 			}
 		});
 		// Set size
-		// set_maingrid();
 		// $('#progressbar_subsection').slideDown();
-		set_rows(patt.rows,false);
 		set_cols(patt.stitches,false);
+		set_rows(patt.rows,false);
 		// Set pattern
 		var num_cells = $('#maingrid td').length;
 		$('#maingrid td').each(function(i) {
@@ -274,7 +268,8 @@ function init_fairisle() {
 		// return false;
 	});
 	// Initialize table
-	set_maingrid();
+	set_cols(30);
+	set_rows(20);
 	redraw();
 	// Initialize all table cells to have class colour0
 	$('#maingrid td').addClass('colour0');
