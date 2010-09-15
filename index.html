@@ -8,230 +8,39 @@
 	<title>Fairisle</title>
 	<link rel="stylesheet" href="reset.css" type="text/css" charset="utf-8" />
 	<script src="jquery.min.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="farbtastic.js"></script>
 	<script src="jquery.rule-1.0.1-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="jquery.progressbar.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="json2.js" type="text/javascript" charset="utf-8"></script>
-	<script src="jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
-	<script src="jquery.JSONcookie.js" type="text/javascript" charset="utf-8"></script>
+    <!-- // <script src="jquery.cookie.js" type="text/javascript" charset="utf-8"></script> -->
+    <!-- // <script src="jquery.JSONcookie.js" type="text/javascript" charset="utf-8"></script> -->
 	<link rel="stylesheet" href="farbtastic.css" type="text/css" />
-	<style type="text/css">
-		body { font-family: "Lucida Grande", Arial, sans-serif; font-size: 10px; line-height: 1.25em; }
-		body, html { height: 100%; }
-		#maingrid { margin: 1em 0; table-layout: fixed; line-height: 0; }
-		#maingrid td { border: 1px solid #000; cursor: pointer; }
-		#maingrid th { width: 25px; vertical-align: middle; }
-		.tablesize { width: 2em; border: 2px solid #666; display: inline; cursor: pointer; }
-		.colorwell {
-			border: 2px solid #CCC;
-			width: 6em;
-			text-align: left;
-			cursor: pointer;
-		}
-		#settings_bar .colorwell-selected { border: 2px solid #000; font-weight: bold; }
-		.button:hover { background-color: #000; color: #FFF; }
-		.button { cursor: pointer; padding: 2px 4px; }
-		#settings_bar #add_colour_section { padding-top: 3px; }
-		#settings_bar .settings_section { display: block; padding: 0 1em; margin: 1em 0; text-align: right; }
-		#settings_bar .settings_section h2 { text-align: left; margin-bottom: 0.5em; }
-		#settings_bar .settings_section h3 { float: left; margin-bottom: 0.5em; }
-		#settings_bar .settings_section h4 { text-align: center; }
-		#settings_bar { height: 100%; position:absolute; top: 0; left: 0; width: 195px; border-right: 1px solid #CCC; }
-		#settings_bar #palette p { margin: 0.25em 0; }
-		#settings_bar .settings_section .split_section { display: inline-block; width: 49%; }
-		#grid_holder { margin-left: 196px; height: 100%; overflow: auto; }
-		#textbox { width: 100%; height: 5em; }
-	</style>
+	<script type="text/javascript" src="farbtastic.js"></script>
+	<link rel="stylesheet" href="fairisle.css" type="text/css" />
+	<script src="fairisle.js" type="text/javascript" charset="utf-8"></script>
+    <!-- We need an empty style sheet for jQuery.rules to work -->
+    <style type="text/css"></style>
 	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
-			// Default screen resolution, in pixels per inch
-			var resolution = 114;
-			// Farbtastic colour picker
-		    var f = $.farbtastic('#picker');
-		    var p = $('#picker'); //.css('opacity', 0.25);
-			var selected;
-			$.rule('.colour0{}').appendTo('style');
-			$('.colorwell')
-				.focus(function() {
-					// deselect currently selected colorwell
-					if(selected) { $(selected).css('opacity', 1).removeClass('colorwell-selected'); }
-					// illuminate this colorwell
-					$(selected = this).css('opacity', 1).addClass('colorwell-selected');
-					// callback when this colour is modified
-					f.linkTo(function(c) {
-						$.rule('.'+$(selected).attr('id'),'style').css('background-color',c).css('color',f.hsl[2] > 0.5 ? '#000' : '#fff');
-						// $.rule('.'+$(selected).attr('id')+' { background-color: '+c+' }').appendTo('style');
-						$(selected).val(c);
-					});
-					f.setColor($(selected).val());
-				});
-			// Select current_colour colorwell
-		    $('.colorwell').eq(0).focus().addClass('colour0');
-			// Number of colours
-			function num_colours() { return $('.colorwell').length; }
-			// New colour
-			function add_colour() {
-				var newClass = 'colour'+num_colours();
-				$.rule('.'+newClass+'{}').appendTo('style');
-				var newColourSection = $('#settings_bar > #palette > p > .colorwell-selected').parent()
-							.clone(true).css({'display': 'none', 'height': 'auto'}).insertBefore($('#settings_bar > #palette > p:last')).slideDown();
-				newColourSection.children('.colorwell').eq(0).attr({id: newClass, name: newClass })
-							.removeClass().addClass('colorwell').addClass(newClass)
-							.focus()
-							.prev('.rem_colour').show();
-				return newColourSection;
-			}
-			function rem_colour() {
-				var button = this;
-				var thisClass = $(button).next('.colorwell').attr('id');
-				// Change all cells to use colour0
-				$('#maingrid td.'+thisClass).removeClass(thisClass).addClass('colour0');
-				// If colorwell is focused, change focus to previous colorwell
-				if($(button).next('.colorwell').hasClass('colorwell-selected')) {
-					$(button).parent().prevAll('p:visible').eq(0).children('.colorwell').eq(0).focus();
-				}
-				// Hide colorwell (removing it would change num_colours, so adding a new colour would overwrite colours after this one)
-				$(button).parent().slideUp();
-			}
-			$('#add_colour').click(add_colour);
-			$('.rem_colour').click(rem_colour);
-			$('.set_colour').click(function() { $(this).prev().focus(); });
-			// Functions for resizing table
-			function num_rows() { return $('#maingrid tr').length; }
-			function num_cols() { return $('#maingrid td').length/num_rows(); }
-			function set_maingrid() {
-				// Apply table size modifications
-				set_rows();
-				set_cols();
-				// Display
-				var zoom = $('#zoom').val()/100.0;
-				$('#maingrid').css('width',(zoom*resolution/(parseFloat($('#num_colgauge').val())/4.0)*num_cols()+50)+'px');
-				$('#maingrid').css('height',(zoom*resolution/(parseFloat($('#num_rowgauge').val())/4.0)*num_rows())+'px');
-			}
-			function add_col() { $('#maingrid td:last').clone(true).insertBefore($('#maingrid tr th:odd')).removeClass().addClass('colour0'); }
-			function rem_col() { $('#maingrid tr th:odd').prev().remove(); }
-			function add_row() { var nr=eval(num_rows()+1); $('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:last')).children('th').text(nr).siblings('td').removeClass().addClass('colour0');	}
-			function rem_row() { $('#maingrid tr:last').remove(); }
-			function set_rows() {
-				var d = parseInt($('#num_rows').val()) - parseInt(num_rows());
-				if(d>0) {
-					for(var i=0; i<d; i++) { add_row(); }
-				} else {
-					d = -d;
-					for(var i=0; i<d; i++) { rem_row(); }
-				}
-			}
-			function set_cols() {
-				var d = parseInt($('#num_cols').val()) - parseInt(num_cols());
-				if(d>0) {
-					for(var i=0; i<d; i++) { add_col(); }
-				} else {
-					d = -d;
-					for(var i=0; i<d; i++) { rem_col(); }
-				}
-			}
-			// Functions to encode / decode saved patterns
-			function encode_pattern() {
-				var patt = {
-					// Pattern size
-					"stitches": num_cols(), 
-					"rows": num_rows(), 
-					// Pattern gauge
-					"colgauge": $('#num_colgauge').val(), 
-					"rowgauge": $('#num_rowgauge').val(), 
-					// Colours
-					"colours": $('.colorwell').map(function() { return $(this).val(); }).get(),
-					"visiblecolours": $('.colorwell').map(function() { return $(this).is(':visible'); }).get(),
-					// Pattern serialized as an array
-					"pattern": $('#maingrid td').map(
-						function() {
-							var nc=num_colours();
-							for(var c=0; c<nc; c++) {
-								if($(this).hasClass('colour'+c)) {
-									return c;
-								}
-							}
-						}).get()
-					};
-				return JSON.stringify(patt);
-			}
-			function decode_pattern(pattJSON) {
-				if(pattJSON == '') { alert('Empty pattern!'); return false; }
-				var patt = JSON.parse(pattJSON);
-				// Pattern size
-				$('#num_cols').val(patt.stitches);
-				$('#num_rows').val(patt.rows);
-				// Pattern gauge
-				$('#num_colgauge').val(patt.colgauge);
-				$('#num_rowgauge').val(patt.rowgauge);
-				// Colours
-				$('#colour0').focus();
-				$('#settings_bar > #palette > p > .colorwell:not(#colour0)').parent().remove();
-				$.each(patt.colours,function(i){
-					if(i==0) {
-						$('#colour0').val(patt.colours[i]).focus();
-					} else {
-						var newSec = add_colour();
-						newSec.children('.colorwell').val(patt.colours[i]).attr('id','colour'+i).focus();
-						if(!patt.visiblecolours[i]) { newSec.slideUp(); }
-					}
-				});
-				// Pattern
-				$('#maingrid td').each(function(i) { $(this).removeClass().addClass('colour'+patt.pattern[i]); }); // EDIT FROM HERE
-				// Display everything
-				set_maingrid();
-				return true;
-			}
-			// Buttons
-			$('.button').mousedown(function() { return false; }); // prevent mousedowns from selecting text
-			$('.inc').click(function() { var tbox=$(this).siblings('.tablesize'); tbox.val(parseInt(tbox.val())+1); set_maingrid(); });
-			$('.dec').click(function() { var tbox=$(this).siblings('.tablesize'); tbox.val(parseInt(tbox.val())-1); set_maingrid(); });
-			$('.double').click(function() { var tbox=$(this).siblings('.tablesize'); tbox.val(parseInt(tbox.val())*2.0); set_maingrid(); });
-			$('.half').click(function() { var tbox=$(this).siblings('.tablesize'); tbox.val(parseInt(tbox.val())/2.0); set_maingrid(); });
-			$('.set').click(set_maingrid);
-			$('input').click(function() { $(this).select(); });
-			$('textarea').click(function() { $(this).select(); });
-			$('.tablesize').keypress(function(e) { if(e.which == 13) { set_maingrid(); $(this).select(); } });
-			$('#load').click(function() { // from JSONcookie example
-				if(confirm("Load new pattern?\nThis will overwrite the current pattern.")) { 
-					decode_pattern($('#textbox').val());
-					$('#textbox').val('');
-				}
-				// var name = $('#cookieName').val(),
-				// o = $.JSONCookie(name);
-				// $('#cookieObject').val('').val(JSON.stringify(obj));
-				// return false;
-			});
-			$('#save').click(function() { // from JSONcookie example
-				$('#textbox').val(encode_pattern());
-				// var name = $('#cookieName').val(),
-				// val = $('#cookieObject').val();
-				// eval('obj = ' + val, window);
-				// $.JSONCookie(name, obj, {path: '/'});
-				// return false;
-			});
-			// Initialize table
-			set_maingrid();
-			// Initialize all table cells to have class colour0
-			$('#maingrid td').addClass('colour0');
-			// Functions for clicking on table cell
-			var mouseisdown = false;
-			$('#maingrid td').mousedown(function() { mouseisdown = true; $(this).removeClass().addClass($(selected).attr('id')); return false; });
-			$('#maingrid td').mouseenter(function() { if(mouseisdown) { $(this).removeClass().addClass($(selected).attr('id')); } });
-			$('body').mouseleave(function() { mouseisdown = false; });
-			$('body').mouseup(function() { mouseisdown = false; });
-			// set colour0 to white
-			f.setColor('#ffffff');
-			$('#colour0').prev('.rem_colour').hide();
-			// Add one extra colour to start with
-			add_colour();
-			f.setColor('#334499');
-		});
-	</script>
+        $(document).ready(function() {
+            init_fairisle();
+        });
+        window.onbeforeunload = function(e) {
+            var e = e || window.event;
+            // FF & IE
+            if (e) {
+                e.returnValue = 'You might have unsaved changes.';
+            }
+            // Safari
+        	return 'You might have unsaved changes.';
+        }
+    </script>
 </head>
 
 <body>
 
 <div id="settings_bar">
+    <div class="settings_section" id="progressbar_subsection">
+        <span id="progressbar">0%</span>
+    </div>
 	<div class="settings_section">
 		<h3>Stitches:</h3>
 		<p>
@@ -239,7 +48,12 @@
 			<input type="text" name="num_cols" value="30" id="num_cols" class="tablesize" />
 			<a class="set button" id="set_cols">ok</a>
 		</p>
-	</div>
+	    <p class="settings_subsection">
+    	    <a>remove stitch:</a>
+			<input type="text" name="specific_col" value="" id="specific_col" class="tablesize" />
+			<a class="set button" id="rem_specific_col">ok</a>
+        </p>
+    </div>
 	<div class="settings_section">
 		<h3>Rows:</h3>
 		<p>
@@ -247,7 +61,17 @@
 			<input type="text" name="num_rows" value="20" id="num_rows" class="tablesize" />
 			<a class="set button" id="set_rows">ok</a>
 		</p>
-	</div>
+	    <p class="settings_subsection">
+    	    <a>remove row:</a>
+			<input type="text" name="specific_row" value="" id="specific_row" class="tablesize" />
+			<a class="set button" id="rem_specific_row">ok</a>
+        </p>
+	    <p class="settings_subsection">
+    	    <a>insert row after:</a>
+			<input type="text" name="insert_row_after" value="" id="insert_row_after" class="tablesize" />
+			<a class="set button" id="insert_row">ok</a>
+        </p>
+    </div>
 	<div class="settings_section">
 		<h3>Stitches / 4"</h3>
 		<a class="inc button" id="inc_colgauge">+</a>/<a class="dec button" id="dec_colgauge">-</a>
@@ -296,6 +120,8 @@
 	<tr><th>3</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><th>3</th></tr>
 	<tr><th>4</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><th>4</th></tr>
 </table>
+<!-- <textarea id="testarea" rows="20" cols="100"></textarea> -->
+
 </div>
 
 </body>

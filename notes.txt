@@ -1,5 +1,7 @@
 -- insert / delete rows & columns
--- text buttons
+-- divide a colour into two colours, splitting the cells that use that colour according to their locations. i.e. say if you wanted to make all blue cells after row 30 green, but keep the ones before row 30 blue
+-- make background colour softer & change grid colour
+-- make load more robust. Should work without reloading the page
 -- copy / paste regions
 	-- could have slave copies which retain link to original, and update when original section is changed
 		-- or... all copies of the section could be equal, so editing one will change them all
