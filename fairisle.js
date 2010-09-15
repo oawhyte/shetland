@@ -73,10 +73,6 @@ function init_fairisle() {
 		set_cols($('#num_cols').val());
 		redraw();
 	}
-	function add_col() {
-		$('#maingrid td:last').clone(true).insertBefore($('#maingrid tr th:odd')).removeClass().addClass('colour0');
-		redraw();
-	}
 	function rem_col(i) {
 		if(!i) {
 			$('#maingrid tr th:odd').prev().remove();
@@ -88,18 +84,18 @@ function init_fairisle() {
 		}
 		redraw();
 	}
-    // function add_row() { var nr=eval(num_rows()+1); $('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:last')).children('th').text(nr).siblings('td').removeClass().addClass('colour0'); }
-	function add_row(i) {
+	function add_row_after(i) {
 		if(!i) {
-			$('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:last'))
-				.children('th').siblings('td').removeClass().addClass('colour0');
-			$('#num_rows').val(num_rows());
+			alert('No row specified');
+			// $('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:last'))
+			// 	.children('th').siblings('td').removeClass().addClass('colour0');
+			// $('#num_rows').val(num_rows());
 		} else {
 			$('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:eq('+(parseInt(i)-1)+')'))
 				.children('th').siblings('td').removeClass().addClass('colour0');
 			$('#num_rows').val(num_rows());
+			redraw();
 		}
-		redraw();
 	}
 	function rem_row(i) {
 		if(!i) {
@@ -151,14 +147,11 @@ function init_fairisle() {
 	function set_rows(n,do_redraw) {
 		if(!do_redraw) { do_redraw = true; }
 		var d = parseInt(n) - parseInt(num_rows());
-		// var d = parseInt($('#num_rows').val()) - parseInt(num_rows());
 		if(d>=0) {
 			add_rows(d);
-			// for(var i=0; i<d; i++) { add_row(); }
 		} else {
 			d = -d;
 			rem_rows(d);
-			// for(var i=0; i<d; i++) { rem_row(); }
 		}
 		$('#num_rows').val(n);
 		if(do_redraw) { redraw(); }
@@ -166,14 +159,11 @@ function init_fairisle() {
 	function set_cols(n,do_redraw) {
 		if(!do_redraw) { do_redraw = true; }
 		var d = parseInt(n) - parseInt(num_cols());
-		// var d = parseInt($('#num_cols').val()) - parseInt(num_cols());
 		if(d>=0) {
 			add_cols(d);
-			// for(var i=0; i<d; i++) { add_col(); }
 		} else {
 			d = -d;
 			rem_cols(d);
-			// for(var i=0; i<d; i++) { rem_col(); }
 		}
 		$('#num_cols').val(n);
 		if(do_redraw) { redraw(); }
@@ -258,7 +248,7 @@ function init_fairisle() {
 		}
 	});
 	$('#rem_specific_row').click(function(){ rem_row($('#specific_row').val());	});
-	$('#insert_row').click(function(){ add_row($('#insert_row_after').val());	});
+	$('#insert_row').click(function(){ add_row_after($('#insert_row_after').val());	});
 	$('#set_zoom').click(redraw);
 	$('#set_colgauge').click(redraw);
 	$('#set_rowgauge').click(redraw);
