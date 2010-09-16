@@ -1,7 +1,7 @@
 body { font-family: "Lucida Grande", Arial, sans-serif; font-size: 10px; line-height: 1.25em; background-color: #F0F0F0; color: #444; }
 body, html { height: 100%; }
 #maingrid { margin: 1em 0; table-layout: fixed; line-height: 0; }
-#maingrid td { border: 1px solid #444; cursor: pointer; }
+#maingrid td { border: 1px solid #444; cursor: pointer; vertical-align: middle; color: transparent; }
 #maingrid th { width: 25px; vertical-align: middle; }
 .tablesize { width: 2em; border: 2px solid #666; display: inline; cursor: pointer; }
 .colorwell {
@@ -10,7 +10,7 @@ body, html { height: 100%; }
 	text-align: left;
 	cursor: pointer;
 }
-input {
+#maingrid td, input {
 	font-family: Lucidatypewriter, monospace;
 }
 #settings_bar .colorwell-selected { border: 2px solid #000; font-weight: bold; }
@@ -23,7 +23,7 @@ input {
 #settings_bar .settings_section h2 { text-align: left; margin-bottom: 0.5em; }
 #settings_bar .settings_section h3 { float: left; margin-bottom: 0.5em; }
 #settings_bar .settings_section h4 { text-align: center; }
-#settings_bar { height: 100%; position:absolute; top: 0; left: 0; width: 195px; border-right: 1px solid #CCC; }
+#settings_bar { height: 100%; position: absolute; top: 0; left: 0; width: 195px; border-right: 1px solid #CCC; }
 #settings_bar #palette p { margin: 0.25em 0; }
 #settings_bar .settings_section .split_section { display: inline-block; width: 49%; }
 #grid_holder { margin-left: 196px; height: 100%; overflow: auto; }

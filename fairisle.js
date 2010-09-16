@@ -64,8 +64,6 @@ function init_fairisle() {
 		$('#maingrid').css('width',(zoom*resolution/(parseFloat($('#num_colgauge').val())/4.0)*num_cols()+50)+'px');
 		$('#maingrid').css('height',(zoom*resolution/(parseFloat($('#num_rowgauge').val())/4.0)*num_rows())+'px');
 		$('#maingrid tr').each( function(ndx) {$(this).children('th').text(ndx+1);} );
-		$('#maingrid td').mousedown(function() { mouseisdown = true; $(this).removeClass().addClass($('.colorwell-selected').attr('id')); return false; });
-		$('#maingrid td').mouseenter(function() { if(mouseisdown) { $(this).removeClass().addClass($('.colorwell-selected').attr('id')); } });
 	}
 	function rem_col(i) {
 		if(!i) {
@@ -108,7 +106,7 @@ function init_fairisle() {
 		var cols = num_cols();
 		var rowText = '<tr><th>&nbsp;</th>';
 		for(var c=0; c<cols; c++) {
-			rowText += '<td class="colour0">&nbsp;</td>';
+			rowText += '<td class="colour0">0</td>';
 		}
 		rowText += '<th>&nbsp;</th></tr>';
 		// Duplicate the row text n times
@@ -125,7 +123,7 @@ function init_fairisle() {
 		// Make text for additional cols in a single row
 		var rowText = '';
 		for(var c=0; c<n; c++) {
-			rowText += '<td class="colour0">&nbsp;</td>';
+			rowText += '<td class="colour0">0</td>';
 		}
 		// Insert the text into each row
 		var rows = num_rows();
@@ -165,6 +163,12 @@ function init_fairisle() {
 	}
 	// Functions to encode / decode saved patterns
 	function encode_pattern() {
+		var pattern = [];
+		var cells = $('#maingrid td');
+		var num_cells = cells.length;
+		for(var i=0; i<num_cells; i++) {
+			pattern[i] = parseInt(cells.eq(i).text());
+		}
 		var patt = {
 			// Pattern size
 			"stitches": num_cols(), 
@@ -176,15 +180,16 @@ function init_fairisle() {
 			"colours": $('.colorwell').map(function() { return $(this).val(); }).get(),
 			"visiblecolours": $('.colorwell').map(function() { return $(this).is(':visible'); }).get(),
 			// Pattern serialized as an array
-			"pattern": $('#maingrid td').map(
-				function() {
-					var nc=num_colours();
-					for(var c=0; c<nc; c++) {
-						if($(this).hasClass('colour'+c)) {
-							return c;
-						}
-					}
-				}).get()
+			"pattern": pattern,
+			// "pattern": $('#maingrid td').map(
+			// 	function() {
+			// 		var nc=num_colours();
+			// 		for(var c=0; c<nc; c++) {
+			// 			if($(this).hasClass('colour'+c)) {
+			// 				return c;
+			// 			}
+			// 		}
+			// 	}).get()
 			};
 		return JSON.stringify(patt);
 	}
@@ -210,24 +215,30 @@ function init_fairisle() {
 			}
 		});
 		// Set size
-		// $('#progressbar_subsection').slideDown();
 		set_cols(patt.stitches,false);
 		set_rows(patt.rows,false);
 		// Set pattern
-		var num_cells = $('#maingrid td').length;
-		$('#maingrid td').each(function(i) {
-			$(this).removeClass().addClass('colour'+patt.pattern[i]);
-		});
+		var cells = $('#maingrid td');
+		var num_cells = cells.length;
+		// $('#progressbar_subsection').slideDown();
+		cells.removeClass();
+		for(var i=0; i<num_cells; i++) {
+			cells.eq(i).addClass('colour'+patt.pattern[i]).text(patt.pattern[i]);
+		}
+		// $('#maingrid td').each(function(i) {
+			// $(this).removeClass().addClass('colour'+patt.pattern[i]);
+			// $('#progressbar').progressBar(100*i/num_cells);
+		// });
 		// $('#progressbar_subsection').slideUp();
 		redraw();
 		return true;
 	}
 	// Buttons
 	$('.button').mousedown(function() { return false; }); // prevent mousedowns from selecting text
-	$('.inc').click(function() { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())+1); tbox.focus(); });
-	$('.dec').click(function() { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())-1); tbox.focus(); });
+	$('.inc').click(function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())+1);   tbox.focus(); });
+	$('.dec').click(function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())-1);   tbox.focus(); });
 	$('.double').click(function() { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())*2.0); tbox.focus(); });
-	$('.half').click(function() { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())/2.0); tbox.focus(); });
+	$('.half').click(function()   { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())/2.0); tbox.focus(); });
 	$('#set_cols').click(function() {
 		var n = parseInt($('#num_cols').val());
 		if(n>=num_cols() || confirm("Really delete some stitches?")) {
@@ -275,6 +286,19 @@ function init_fairisle() {
 	$('#maingrid td').addClass('colour0');
 	// Functions for clicking on table cell
 	var mouseisdown = false;
+	$('#maingrid td').live('mousedown', function() {
+		mouseisdown = true;
+		var s = $('.colorwell-selected').attr('id');
+		$(this).removeClass().addClass(s).text(s.slice(-1));
+		return false;
+	});
+	$('#maingrid td').live('mouseenter', function() {
+		if(mouseisdown) {
+			var s = $('.colorwell-selected').attr('id');
+			$(this).removeClass().addClass(s).text(s.slice(-1));
+		}
+		return false;
+	});
 	$('body').mouseleave(function() { mouseisdown = false; });
 	$('body').mouseup(function() { mouseisdown = false; });
 	// set colour0 to white
@@ -284,7 +308,7 @@ function init_fairisle() {
 	add_colour();
 	f.setColor('#334499');
 	// Setup subsection and progressbar
-	$('#progressbar').progressBar();
+	// $('#progressbar').progressBar();
 	$('#progressbar_subsection').hide();
 	// $('#progressbar_subsection').modal();
 }
