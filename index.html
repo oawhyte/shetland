@@ -18,6 +18,7 @@
     <!-- We need an empty style sheet for jQuery.rules to work -->
     <style type="text/css"></style>
 	<link rel="stylesheet" href="fairisle.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" media="print" href="fairisle-print.css" />
 	<script src="jquery.rule-1.0.1-min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
@@ -96,12 +97,15 @@
 		<h3>Colours:</h3>
 		<p class="colour_section">
 			<a class="button rem_colour">delete</a>
-			<input type="text" id="colour0" name="colour0" class="colorwell" value="#ffffff" />
+			<input type="text" id="colour0" name="colour0" class="colour0 colorwell colorwell-selected" value="#ffffff" />
 			<a class="button set_colour">ok</a>
 		</p>
 		<p id="add_colour_section">
 			<a class="button" id="add_colour">new colour</a>
 			<a class="button set_colour" style="visibility: hidden;">ok</a>
+		</p>
+		<p class="settings_subsection">
+			<a class="button" id="show_numbers">show numbers</a>/<a class="button" id="hide_numbers">hide numbers</a>
 		</p>
 	</div>
 	<!-- Farbtastic color picker -->

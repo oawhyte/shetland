@@ -6,55 +6,46 @@ function init_fairisle() {
     var p = $('#picker'); //.css('opacity', 0.25);
 	// var selected;
 	$.rule('.colour0{}').appendTo('style');
-	$('.colorwell')
-		.focus(function() {
-			// deselect currently selected colorwell
-			// if(selected) { $(selected).css('opacity', 1).removeClass('colorwell-selected'); }
-			$('.colorwell').removeClass('colorwell-selected');
-			// illuminate this colorwell
-			var selected = this;
-			$(selected).addClass('colorwell-selected');
-			// callback when this colour is modified
-			f.linkTo(function(c) {
-				$.rule('.'+$(selected).attr('id'),'style').css('background-color',c).css('color',f.hsl[2] > 0.5 ? '#000' : '#fff');
-				// $.rule('.'+$(selected).attr('id')+' { background-color: '+c+' }').appendTo('style');
-				$(selected).val(c);
-			});
-			f.setColor($(selected).val());
-		});
-	// Select current_colour colorwell
-    $('.colorwell').eq(0).focus().addClass('colour0');
 	// Number of colours
 	function num_colours() { return $('.colorwell').length; }
 	// New colour
-	function add_colour() {
+	function add_colour(s) {
 		var newClass = 'colour'+num_colours();
 		$.rule('.'+newClass+'{}').appendTo('style');
-		var newColourSection = $('#settings_bar > #palette > p > .colorwell-selected').parent()
-					.clone(true).css({'display': 'none', 'height': 'auto'}).insertBefore($('#settings_bar > #palette > p:last')).slideDown();
+		// var newColourSection = $('#settings_bar > #palette > p > .colorwell-selected').parent()
+		var newColourSection = $('#settings_bar .colour_section').eq($('.colorwell').index($('.colorwell-selected'))).clone();
+		if (!s) { var s = newColourSection.children('.colorwell').eq(0).val(); }
+		newColourSection.css({'display':'none','height': 'auto'}).insertBefore($('#settings_bar > #palette > #add_colour_section'));
 		newColourSection.children('.colorwell').eq(0).attr({id: newClass, name: newClass })
-					.removeClass().addClass('colorwell').addClass(newClass)
-					.focus()
+					.removeClass().addClass('colorwell').addClass(newClass).val(s)
 					.prev('.rem_colour').show();
+		focus_colorwell($('#'+newClass));
+		newColourSection.slideDown();
 		return newColourSection;
 	}
+	function show_numbers() { $('#maingrid td').removeClass('transparent'); }
+	function hide_numbers() { $('#maingrid td').addClass('transparent');    }
 	function rem_colour() {
 		if(confirm("Delete colour?")) {
 			var button = this;
 			var thisClass = $(button).next('.colorwell').attr('id');
 			// Change all cells to use colour0
-			$('#maingrid td.'+thisClass).removeClass(thisClass).addClass('colour0');
+			var cells = $('#maingrid td.'+thisClass);
+    		var num_cells = cells.length;
+    		for(var i=0; i<num_cells; i++) {
+    			cells.eq(i).removeClass('colour'+cells.eq(i).text()).addClass('colour0').text('0');
+    		}
 			// If colorwell is focused, change focus to previous colorwell
 			if($(button).next('.colorwell').hasClass('colorwell-selected')) {
-				$(button).parent().prevAll('p:visible').eq(0).children('.colorwell').eq(0).focus();
+                // focus_colorwell($(button).parent().prevAll('p:visible').eq(0).children('.colorwell').eq(0));
+                // 6 = length('colour')
+				focus_colorwell($('#colour'+(parseInt(thisClass.slice(6))-1)));
 			}
 			// Hide colorwell (removing it would change num_colours, so adding a new colour would overwrite colours after this one)
 			$(button).parent().slideUp();
 		}
+		return false;
 	}
-	$('#add_colour').click(add_colour);
-	$('.rem_colour').click(rem_colour);
-	$('.set_colour').click(function() { $(this).prev().focus(); });
 	// Functions for resizing table
 	function num_rows() { return $('#maingrid tr').length; }
 	function num_cols() { return $('#maingrid td').length/num_rows(); }
@@ -84,29 +75,38 @@ function init_fairisle() {
 			// 	.children('th').siblings('td').removeClass().addClass('colour0');
 			// $('#num_rows').val(num_rows());
 		} else {
-			$('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:eq('+(parseInt(i)-1)+')'))
-				.children('th').siblings('td').removeClass().addClass('colour0');
-			$('#num_rows').val(num_rows());
+            // $('#maingrid tr:last').clone(true).insertAfter($('#maingrid tr:eq('+(parseInt(i)-1)+')'))
+                // .children('th').siblings('td').removeClass().addClass('colour0');
+            // $('#num_rows').val(num_rows());
+            add_rows(1,i);
+    		$('#num_rows').val(num_rows());
 			redraw();
 		}
 	}
 	function rem_row(i) {
 		if(!i) {
-			$('#maingrid tr:last').remove();
-			$('#num_rows').val(num_rows());
+			alert('No row specified!');
+            // $('#maingrid tr:last').remove();
 		} else {
 			$('#maingrid tr:eq('+(parseInt(i)-1)+')').remove();
-			$('#num_rows').val(num_rows());
 		}
+		$('#num_rows').val(num_rows());
 		redraw();
 	}
 	// Add many rows at the same time
-	function add_rows(n) {
+	function add_rows(n,i) {
+        // Are numbers transparent?
+		var transClass;
+		if($('#maingrid td:eq(1)').hasClass('transparent')) { 
+		    transClass = ' transparent';
+		} else {
+		    transClass = '';
+		}
 		// Make text for a single row
 		var cols = num_cols();
 		var rowText = '<tr><th>&nbsp;</th>';
 		for(var c=0; c<cols; c++) {
-			rowText += '<td class="colour0">0</td>';
+			rowText += '<td class="colour0'+transClass+'">0</td>';
 		}
 		rowText += '<th>&nbsp;</th></tr>';
 		// Duplicate the row text n times
@@ -114,16 +114,27 @@ function init_fairisle() {
 		for(var r=0; r<n; r++) {
 			textToInsert[r]  = rowText;
 		}
-		// Add the whole thing to the table
-		$('#maingrid').append(textToInsert.join(''));
+		if(!i) {
+    		// Add the whole thing to the table
+    		$('#maingrid').append(textToInsert.join(''));
+		} else {
+		    $('#maingrid tr:eq('+(parseInt(i)-1)+')').after(textToInsert.join(''));
+		}
 		// $('#testarea').val(textToInsert.join(''));
 	}
 	function rem_rows(n) { $('#maingrid tr').slice(-n).remove(); }
 	function add_cols(n) {
+        // Are numbers transparent?
+		var transClass;
+		if($('#maingrid td:eq(1)').hasClass('transparent')) { 
+		    transClass = ' transparent';
+		} else {
+		    transClass = '';
+		}
 		// Make text for additional cols in a single row
 		var rowText = '';
 		for(var c=0; c<n; c++) {
-			rowText += '<td class="colour0">0</td>';
+			rowText += '<td class="colour0'+transClass+'">0</td>';
 		}
 		// Insert the text into each row
 		var rows = num_rows();
@@ -203,16 +214,15 @@ function init_fairisle() {
 		$('#num_colgauge').val(patt.colgauge);
 		$('#num_rowgauge').val(patt.rowgauge);
 		// Colours
-		$('#colour0').focus();
+		focus_colorwell($('#colour0'));
 		$('#settings_bar > #palette > p > .colorwell:not(#colour0)').parent().remove();
 		$.each(patt.colours,function(i){
-			if(i==0) {
-				$('#colour0').val(patt.colours[i]).focus();
-			} else {
-				var newSec = add_colour();
-				newSec.children('.colorwell').val(patt.colours[i]).attr('id','colour'+i).focus();
-				if(!patt.visiblecolours[i]) { newSec.slideUp(); }
+			if(i>0) {
+				var newSec = add_colour(patt.colours[i]);
+    			if(!patt.visiblecolours[i]) { newSec.hide(); }
 			}
+            // $('#colour'+i).val();
+            // focus_colorwell($('#colour'+i));
 		});
 		// Set size
 		set_cols(patt.stitches,false);
@@ -234,9 +244,9 @@ function init_fairisle() {
 		return true;
 	}
 	// Buttons
-	$('.button').mousedown(function() { return false; }); // prevent mousedowns from selecting text
-	$('.inc').click(function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())+1);   tbox.focus(); });
-	$('.dec').click(function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())-1);   tbox.focus(); });
+	$('.button').live('mousedown', function() { return false; }); // prevent mousedowns from selecting text
+	$('.inc').live('click', function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())+1);   tbox.focus(); return false; });
+	$('.dec').live('click', function()    { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())-1);   tbox.focus(); return false; });
 	$('.double').click(function() { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())*2.0); tbox.focus(); });
 	$('.half').click(function()   { var tbox=$(this).siblings('.tablesize:eq(0)'); tbox.val(parseInt(tbox.val())/2.0); tbox.focus(); });
 	$('#set_cols').click(function() {
@@ -257,7 +267,27 @@ function init_fairisle() {
 	$('#set_zoom').click(redraw);
 	$('#set_colgauge').click(redraw);
 	$('#set_rowgauge').click(redraw);
-	$('input').click(function() { $(this).select(); });
+	$('input').live('click', function() { $(this).select(); return false; });
+	$('#add_colour').click( function() { add_colour(); } );
+	$('.rem_colour').live('click', rem_colour);
+	$('.set_colour').live('click', function() { $(this).prev().focus(); return false; });
+	function focus_colorwell(selected) {
+		// deselect currently selected colorwell
+		// if(selected) { $(selected).css('opacity', 1).removeClass('colorwell-selected'); }
+		$('.colorwell').removeClass('colorwell-selected');
+		// illuminate this colorwell
+        // var selected = this;
+		$(selected).addClass('colorwell-selected');
+		// callback when this colour is modified
+		f.linkTo(function(c) {
+			$.rule('.'+$(selected).attr('id'),'style').css('background-color',c).css('color',f.hsl[2] > 0.5 ? '#000' : '#fff');
+			// $.rule('.'+$(selected).attr('id')+' { background-color: '+c+' }').appendTo('style');
+			$(selected).val(c);
+		});
+		f.setColor($(selected).val());
+	}
+	$('.colorwell').live('click', function() { focus_colorwell(this); return false; });
+	$('.colorwell').live('focus', function() { focus_colorwell(this); return false; } );
 	$('textarea').click(function() { $(this).select(); });
 	$('.tablesize').keypress(function(e) { if(e.which == 13) { $(this).siblings('.set:eq(0)').click(); $(this).select(); } });
 	$('#load').click(function() { // from JSONcookie example
@@ -278,9 +308,12 @@ function init_fairisle() {
 		// $.JSONCookie(name, obj, {path: '/'});
 		// return false;
 	});
+	$('#show_numbers').click(show_numbers);
+	$('#hide_numbers').click(hide_numbers);
 	// Initialize table
-	set_cols(30);
-	set_rows(20);
+	set_cols(30, false);
+	set_rows(20, false);
+	hide_numbers();
 	redraw();
 	// Initialize all table cells to have class colour0
 	$('#maingrid td').addClass('colour0');
@@ -289,24 +322,26 @@ function init_fairisle() {
 	$('#maingrid td').live('mousedown', function() {
 		mouseisdown = true;
 		var s = $('.colorwell-selected').attr('id');
-		$(this).removeClass().addClass(s).text(s.slice(-1));
+		$(this).removeClass('colour'+$(this).text()).addClass(s).text(s.slice(6));
 		return false;
 	});
 	$('#maingrid td').live('mouseenter', function() {
 		if(mouseisdown) {
 			var s = $('.colorwell-selected').attr('id');
-			$(this).removeClass().addClass(s).text(s.slice(-1));
+			$(this).removeClass('colour'+$(this).text()).addClass(s).text(s.slice(6));
 		}
 		return false;
 	});
 	$('body').mouseleave(function() { mouseisdown = false; });
 	$('body').mouseup(function() { mouseisdown = false; });
+	// Select current_colour colorwell
+    focus_colorwell($('#colour0'));
+	$('#colour0').prev('.rem_colour').hide();
 	// set colour0 to white
 	f.setColor('#ffffff');
-	$('#colour0').prev('.rem_colour').hide();
 	// Add one extra colour to start with
-	add_colour();
-	f.setColor('#334499');
+	add_colour('#334499');
+    // f.setColor();
 	// Setup subsection and progressbar
 	// $('#progressbar').progressBar();
 	$('#progressbar_subsection').hide();

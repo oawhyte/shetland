@@ -1,18 +1,13 @@
 body { font-family: "Lucida Grande", Arial, sans-serif; font-size: 10px; line-height: 1.25em; background-color: #F0F0F0; color: #444; }
 body, html { height: 100%; }
 #maingrid { margin: 1em 0; table-layout: fixed; line-height: 0; }
-#maingrid td { border: 1px solid #444; cursor: pointer; vertical-align: middle; color: transparent; }
+#maingrid td { border: 1px solid #444; cursor: pointer; vertical-align: middle; 
+/*    color: transparent;*/
+}
 #maingrid th { width: 25px; vertical-align: middle; }
 .tablesize { width: 2em; border: 2px solid #666; display: inline; cursor: pointer; }
-.colorwell {
-	border: 2px solid #CCC;
-	width: 6em;
-	text-align: left;
-	cursor: pointer;
-}
-#maingrid td, input {
-	font-family: Lucidatypewriter, monospace;
-}
+.colorwell { border: 2px solid #CCC; width: 6em; text-align: left; cursor: pointer; }
+#maingrid td, input { font-family: Lucidatypewriter, monospace; }
 #settings_bar .colorwell-selected { border: 2px solid #000; font-weight: bold; }
 .button:hover { background-color: #000; color: #FFF; }
 .button { cursor: pointer; }
@@ -28,3 +23,4 @@ body, html { height: 100%; }
 #settings_bar .settings_section .split_section { display: inline-block; width: 49%; }
 #grid_holder { margin-left: 196px; height: 100%; overflow: auto; }
 #textbox { width: 100%; height: 5em; }
+.transparent { color: transparent; }

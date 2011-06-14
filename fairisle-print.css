@@ -1,0 +1,5 @@
+#settings_bar { display: none; }
+#body { width: 100%; }
+#grid_holder { margin: 0; height: 100%; overflow: inherit; }
+#maingrid td { border: 1px solid #000; vertical-align: middle; }
+
