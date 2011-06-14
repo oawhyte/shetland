@@ -1,3 +1,11 @@
+Immediate
+---------
+
+- HTML5 local storage for saving
+
+Long-term / possible
+--------------------
+
 - arrow up / down in a number box could increment / decrement the number
 - don't prompt, just offer undo
 - divide a colour into two colours, splitting the cells that use that colour according to their locations. i.e. say if you wanted to make all blue cells after row 30 green, but keep the ones before row 30 blue
