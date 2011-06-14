@@ -220,6 +220,10 @@ function init_fairisle() {
 			if(i>0) {
 				var newSec = add_colour(patt.colours[i]);
     			if(!patt.visiblecolours[i]) { newSec.hide(); }
+			} else {
+            	$('#colour0').val(patt.colours[i]);
+                focus_colorwell($('#colour0'));
+                // f.setColor(patt.colours[i]);
 			}
             // $('#colour'+i).val();
             // focus_colorwell($('#colour'+i));
@@ -233,7 +237,7 @@ function init_fairisle() {
 		// $('#progressbar_subsection').slideDown();
 		cells.removeClass();
 		for(var i=0; i<num_cells; i++) {
-			cells.eq(i).addClass('colour'+patt.pattern[i]).text(patt.pattern[i]);
+			cells.eq(i).addClass('colour'+patt.pattern[i]).addClass('transparent').text(patt.pattern[i]);
 		}
 		// $('#maingrid td').each(function(i) {
 			// $(this).removeClass().addClass('colour'+patt.pattern[i]);
