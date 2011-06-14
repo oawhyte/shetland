@@ -54,6 +54,7 @@ function init_fairisle() {
 		var zoom = $('#zoom').val()/100.0;
 		$('#maingrid').css('width',(zoom*resolution/(parseFloat($('#num_colgauge').val())/4.0)*num_cols()+50)+'px');
 		$('#maingrid').css('height',(zoom*resolution/(parseFloat($('#num_rowgauge').val())/4.0)*num_rows())+'px');
+		$('#maingrid').css('font-size',zoom*100+"%");
 		$('#maingrid tr').each( function(ndx) {$(this).children('th').text(ndx+1);} );
 	}
 	function rem_col(i) {
