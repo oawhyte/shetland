@@ -18,13 +18,13 @@ function init_fairisle() {
 		newColourSection.css({'display':'none','height': 'auto'}).insertBefore($('#settings_bar > #palette > #add_colour_section'));
 		newColourSection.children('.colorwell').eq(0).attr({id: newClass, name: newClass })
 					.removeClass().addClass('colorwell').addClass(newClass).val(s)
-					.prev('.rem_colour').show();
+                    .prev('.rem_colour').show();
 		focus_colorwell($('#'+newClass));
 		newColourSection.slideDown();
 		return newColourSection;
 	}
-	function show_numbers() { $('#maingrid td').removeClass('transparent'); }
-	function hide_numbers() { $('#maingrid td').addClass('transparent');    }
+	function show_numbers() { $('#numbers_visible').val(1); $('#maingrid td').removeClass('transparent'); }
+	function hide_numbers() { $('#numbers_visible').val(0); $('#maingrid td').addClass('transparent');    }
 	function rem_colour() {
 		if(confirm("Delete colour?")) {
 			var button = this;
@@ -237,7 +237,10 @@ function init_fairisle() {
 		// $('#progressbar_subsection').slideDown();
 		cells.removeClass();
 		for(var i=0; i<num_cells; i++) {
-			cells.eq(i).addClass('colour'+patt.pattern[i]).addClass('transparent').text(patt.pattern[i]);
+			cells.eq(i).addClass('colour'+patt.pattern[i]).text(patt.pattern[i]);
+		}
+		if($('#numbers_visible').val()=="0") {
+		    $('#maingrid td').addClass('transparent');
 		}
 		// $('#maingrid td').each(function(i) {
 			// $(this).removeClass().addClass('colour'+patt.pattern[i]);
@@ -340,11 +343,11 @@ function init_fairisle() {
 	$('body').mouseup(function() { mouseisdown = false; });
 	// Select current_colour colorwell
     focus_colorwell($('#colour0'));
-	$('#colour0').prev('.rem_colour').hide();
 	// set colour0 to white
 	f.setColor('#ffffff');
 	// Add one extra colour to start with
 	add_colour('#334499');
+	$('#colour0').prev('.rem_colour').hide();
     // f.setColor();
 	// Setup subsection and progressbar
 	// $('#progressbar').progressBar();

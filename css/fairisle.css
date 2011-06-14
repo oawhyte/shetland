@@ -14,9 +14,11 @@ body, html { height: 100%; }
 #settings_bar .settings_section a { padding: 2px 4px; }
 #settings_bar .settings_subsection, 
 #settings_bar #add_colour_section { padding-top: 3px; }
-#settings_bar .settings_section { display: block; padding: 0 1em; margin: 1em 0; text-align: right; }
-#settings_bar .settings_section h2 { text-align: left; margin-bottom: 0.5em; }
-#settings_bar .settings_section h3 { float: left; margin-bottom: 0.5em; }
+#settings_bar .settings_section { display: block; margin: 0.5em 1em; text-align: right; min-height: 1.5em; }
+#settings_bar > h2 { text-transform: uppercase; color: rgba(0,0,0,0.2); font-size: 150%; padding-left: 0.3333em; margin-top: 0.3333em; padding-top: 0.3333em; border-top: 1px solid #CCC; }
+#settings_bar > h2:first-child { padding-top: 0; border-top: none; }
+#settings_bar .settings_section h2 { text-align: left; }
+#settings_bar .settings_section h3 { float: left; padding-top: 2px; }
 #settings_bar .settings_section h4 { text-align: center; }
 #settings_bar { height: 100%; position: absolute; top: 0; left: 0; width: 195px; border-right: 1px solid #CCC; }
 #settings_bar #palette p { margin: 0.25em 0; }

@@ -1,24 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Fairisle</title>
-	<link rel="stylesheet" href="css/reset.css" type="text/css" charset="utf-8" />
+	<link rel="stylesheet" href="css/reset.css" type="text/css" charset="utf-8">
 	<script src="js/jquery-1.4.1.min.js" type="text/javascript" charset="utf-8"></script>
     <!-- // <script src="jquery.progressbar.min.js" type="text/javascript" charset="utf-8"></script> -->
 	<script src="js/json2.js" type="text/javascript" charset="utf-8"></script>
     <!-- // <script src="jquery.cookie.js" type="text/javascript" charset="utf-8"></script> -->
     <!-- // <script src="jquery.JSONcookie.js" type="text/javascript" charset="utf-8"></script> -->
-	<link rel="stylesheet" href="css/farbtastic.css" type="text/css" />
+	<link rel="stylesheet" href="css/farbtastic.css" type="text/css">
 	<script type="text/javascript" src="js/farbtastic.js"></script>
 	<script src="js/fairisle.js" type="text/javascript" charset="utf-8"></script>
     <!-- We need an empty style sheet for jQuery.rules to work -->
     <style type="text/css"></style>
-	<link rel="stylesheet" href="css/fairisle.css" type="text/css" />
-	<link rel="stylesheet" type="text/css" media="print" href="css/fairisle-print.css" />
+	<link rel="stylesheet" href="css/fairisle.css" type="text/css">
+	<link rel="stylesheet" type="text/css" media="print" href="css/fairisle-print.css">
 	<script src="js/jquery.rule-1.0.1-min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
         $(document).ready(function() {
@@ -39,19 +36,17 @@
 <body>
 
 <div id="settings_bar">
-    <div class="settings_section" id="progressbar_subsection">
-        <span id="progressbar">0%</span>
-    </div>
+	<h2>Size</h2>
 	<div class="settings_section">
 		<h3>Stitches:</h3>
 		<p>
 			<a class="inc button" id="inc_cols">+</a>/<a class="dec button" id="dec_cols">-</a>
-			<input type="text" name="num_cols" value="30" id="num_cols" class="tablesize" />
+			<input type="text" name="num_cols" value="30" id="num_cols" class="tablesize">
 			<a class="set button" id="set_cols">ok</a>
 		</p>
 	    <p class="settings_subsection">
     	    <a>remove stitch:</a>
-			<input type="text" name="specific_col" value="" id="specific_col" class="tablesize" />
+			<input type="text" name="specific_col" value="" id="specific_col" class="tablesize">
 			<a class="set button" id="rem_specific_col">ok</a>
         </p>
     </div>
@@ -59,59 +54,63 @@
 		<h3>Rows:</h3>
 		<p>
 			<a class="inc button" id="inc_rows">+</a>/<a class="dec button" id="dec_rows">-</a>
-			<input type="text" name="num_rows" value="20" id="num_rows" class="tablesize" />
+			<input type="text" name="num_rows" value="20" id="num_rows" class="tablesize">
 			<a class="set button" id="set_rows">ok</a>
 		</p>
 	    <p class="settings_subsection">
     	    <a>remove row:</a>
-			<input type="text" name="specific_row" value="" id="specific_row" class="tablesize" />
+			<input type="text" name="specific_row" value="" id="specific_row" class="tablesize">
 			<a class="set button" id="rem_specific_row">ok</a>
         </p>
 	    <p class="settings_subsection">
     	    <a>insert row after:</a>
-			<input type="text" name="insert_row_after" value="" id="insert_row_after" class="tablesize" />
+			<input type="text" name="insert_row_after" value="" id="insert_row_after" class="tablesize">
 			<a class="set button" id="insert_row">ok</a>
         </p>
     </div>
+	<h2>Gauge</h2>
 	<div class="settings_section">
 		<h3>Stitches / 4"</h3>
 		<a class="inc button" id="inc_colgauge">+</a>/<a class="dec button" id="dec_colgauge">-</a>
-		<input type="text" name="num_colgauge" value="28" id="num_colgauge" class="tablesize" />
+		<input type="text" name="num_colgauge" value="28" id="num_colgauge" class="tablesize">
 		<a class="set button" id="set_colgauge">ok</a>
 	</div>
 	<div class="settings_section">
 		<h3>Rows / 4 "</h3>
 		<a class="inc button" id="inc_rowgauge">+</a>/<a class="dec button" id="dec_rowgauge">-</a>
-		<input type="text" name="num_rowgauge" value="38" id="num_rowgauge" class="tablesize" />
+		<input type="text" name="num_rowgauge" value="38" id="num_rowgauge" class="tablesize">
 		<a class="set button" id="set_rowgauge">ok</a>
 	</div>
+	<h2>View</h2>
 	<div class="settings_section">
 		<h3>Zoom:</h3>
-		<p>
-			<a class="double button" id="zoom_in">+</a>/<a class="half button" id="zoom_out">-</a>
-			<input type="text" name="zoom" value="100" id="zoom" class="tablesize" />
-			<a class="set button" id="set_zoom">ok</a>
-		</p>
+		<a class="double button" id="zoom_in">+</a>/<a class="half button" id="zoom_out">-</a>
+		<input type="text" name="zoom" value="100" id="zoom" class="tablesize">
+		<a class="set button" id="set_zoom">ok</a>
 	</div>
+	<div class="settings_section">
+		<h3>Numbers:</h3>
+		<a class="button" id="show_numbers">show</a>/<a class="button" id="hide_numbers">hide</a>
+		<input type="hidden" id="numbers_visible" name="numbers_visible" value="0">
+	</div>
+	<h2>Palette</h2>
 	<div id="palette" class="settings_section">
 		<h3>Colours:</h3>
 		<p class="colour_section">
 			<a class="button rem_colour">delete</a>
-			<input type="text" id="colour0" name="colour0" class="colour0 colorwell colorwell-selected" value="#ffffff" />
+			<input type="text" id="colour0" name="colour0" class="colour0 colorwell colorwell-selected" value="#ffffff">
 			<a class="button set_colour">ok</a>
 		</p>
 		<p id="add_colour_section">
 			<a class="button" id="add_colour">new colour</a>
 			<a class="button set_colour" style="visibility: hidden;">ok</a>
 		</p>
-		<p class="settings_subsection">
-			<a class="button" id="show_numbers">show numbers</a>/<a class="button" id="hide_numbers">hide numbers</a>
-		</p>
 	</div>
 	<!-- Farbtastic color picker -->
 	<div id="picker"></div>
+	<h2>Save &amp; Load</h2>
 	<div class="settings_section">
-		<h3>Save &amp; Load:</h3>
+        <!-- <h3>Save &amp; Load:</h3> -->
 		<p><a class="button" id="load">load</a>/<a class="button" id="save">save</a></p>
 		<textarea id="textbox"></textarea>
 	</div>
