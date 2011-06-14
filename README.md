@@ -5,6 +5,11 @@ A webpage for designing fairisle knitting patterns. Uses [jQuery] with a couple 
 
 [jQuery]: (http://jquery.com/)
 
+Try it out
+----------
+
+You can try out the latest stable version at http://djungelvral.github.com/shetland/
+
 Saving a pattern / loading a saved pattern
 ------------------------------------------
 
