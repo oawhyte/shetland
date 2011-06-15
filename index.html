@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Fairisle</title>
-	<link rel="stylesheet" href="css/reset.css" type="text/css" charset="utf-8">
+	<link rel="stylesheet" href="css/reset.css" type="text/css">
 	<script src="js/jquery-1.4.1.min.js" type="text/javascript" charset="utf-8"></script>
     <!-- // <script src="jquery.progressbar.min.js" type="text/javascript" charset="utf-8"></script> -->
 	<script src="js/json2.js" type="text/javascript" charset="utf-8"></script>
@@ -15,9 +15,12 @@
     <!-- We need an empty style sheet for jQuery.rules to work -->
     <style type="text/css"></style>
 	<link rel="stylesheet" href="css/fairisle.css" type="text/css">
-	<link rel="stylesheet" type="text/css" media="print" href="css/fairisle-print.css">
+	<link rel="stylesheet" href="css/fairisle-print.css" type="text/css" media="print">
+	<!--[if IE]>
+	<link rel="stylesheet" href="css/fairisle-ie.css" type="text/css">
+    <![endif]-->
 	<script src="js/jquery.rule-1.0.1-min.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" charset="utf-8">
+	<script type="text/javascript">
         $(document).ready(function() {
             init_fairisle();
         });
@@ -95,7 +98,7 @@
 	</div>
 	<h2>Palette</h2>
 	<div id="palette" class="settings_section">
-		<h3>Colours:</h3>
+        <!-- <h3>Colours:</h3> -->
 		<p class="colour_section">
 			<a class="button rem_colour">delete</a>
 			<input type="text" id="colour0" name="colour0" class="colour0 colorwell colorwell-selected" value="#ffffff">
