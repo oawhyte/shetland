@@ -1,0 +1,8 @@
+#settings_bar > h2 {
+    color: #000;
+    filter: alpha(opacity=20);
+    zoom: 1;
+} 
+.transparent {
+    font-size: 0;
+}

@@ -8,6 +8,7 @@ body, html { height: 100%; }
 .tablesize { width: 2em; border: 2px solid #666; display: inline; cursor: pointer; }
 .colorwell { border: 2px solid #CCC; width: 6em; text-align: left; cursor: pointer; }
 #maingrid td, input { font-family: Lucidatypewriter, monospace; }
+#maingrid td { -moz-user-select: none; -webkit-user-select: none; -khtml-user-select: none; user-select: none; }
 #settings_bar .colorwell-selected { border: 2px solid #000; font-weight: bold; }
 .button:hover { background-color: #000; color: #FFF; }
 .button { cursor: pointer; }
