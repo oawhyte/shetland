@@ -327,17 +327,23 @@ function init_fairisle() {
 	$('#maingrid td').addClass('colour0');
 	// Functions for clicking on table cell
 	var mouseisdown = false;
+	var currcolourname;
+	var currcolourid;
 	$('#maingrid td').live('mousedown', function() {
 		mouseisdown = true;
-		var s = $('.colorwell-selected').attr('id');
-		$(this).removeClass('colour'+$(this).text()).addClass(s).text(s.slice(6));
+		currcolourname = $('.colorwell-selected').attr('id');
+		currcolourid = currcolourname.slice(6);
+		$(this).removeClass('colour'+$(this).text()).addClass(currcolourname).text(currcolourid);
 		return false;
 	});
 	$('#maingrid td').live('mouseenter', function() {
 		if(mouseisdown) {
-			var s = $('.colorwell-selected').attr('id');
-			$(this).removeClass('colour'+$(this).text()).addClass(s).text(s.slice(6));
+            // var s = $('.colorwell-selected').attr('id');
+			$(this).removeClass('colour'+$(this).text()).addClass(currcolourname).text(currcolourid);
 		}
+		return false;
+	});
+	$('#maingrid').bind('selectstart', function() {
 		return false;
 	});
 	$('body').mouseleave(function() { mouseisdown = false; });

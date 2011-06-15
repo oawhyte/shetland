@@ -24,3 +24,12 @@ Currently, there is only a rudimentary load / save mechanism:
     - Copy the text
     - Paste the text into the box at the bottom of the toolbar
     - Click `load` to read the pasted text and recreate the pattern
+
+Versions
+--------
+
+- 0.1.1 (June 15, 2011)
+    - Fixed Internet Explorer compatibility
+- 0.1.0 (June 14, 2011)
+    - Initial release
+
